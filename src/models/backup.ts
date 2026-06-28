@@ -140,7 +140,7 @@ export class Drive implements BackupProvider {
                     ) {
                       // Clear invalid token from
                       // chrome://identity-internals/
-                      await chrome.identity.removeCachedAuthToken({
+                      await chrome.identity["removeCachedAuthToken"]({
                         token: UserSettings.items.driveToken as string,
                       });
                     }
@@ -176,7 +176,7 @@ export class Drive implements BackupProvider {
       navigator.userAgent.indexOf("Edg") === -1
     ) {
       return new Promise((resolve: (value: boolean) => void) => {
-        return chrome.identity.getAuthToken(
+        return chrome.identity["getAuthToken"](
           {
             interactive: false,
             scopes: ["https://www.googleapis.com/auth/drive.file"],

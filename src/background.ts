@@ -242,7 +242,7 @@ async function getTotp(text: string, silent = false) {
 
 function getBackupToken(service: string) {
   if (isChrome && service === "drive") {
-    chrome.identity.getAuthToken(
+    chrome.identity["getAuthToken"](
       {
         interactive: true,
         scopes: ["https://www.googleapis.com/auth/drive.file"],

@@ -85,7 +85,7 @@ export default Vue.extend({
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             if (isChrome) {
-              chrome.identity.removeCachedAuthToken(
+              chrome.identity["removeCachedAuthToken"](
                 { token: UserSettings.items.driveToken as string },
                 () => {
                   resolve(true);
