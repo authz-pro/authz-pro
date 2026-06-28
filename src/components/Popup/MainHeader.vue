@@ -5,11 +5,12 @@
       <div
         class="icon"
         id="i-menu"
-        v-bind:title="i18n.settings"
-        v-on:click="showMenu()"
+        v-bind:title="style.slidein || style.slideout ? i18n.close : i18n.settings"
+        v-on:click="toggleMenu()"
         v-show="!style.isEditing"
       >
-        <IconCog />
+        <IconCog v-show="!(style.slidein || style.slideout)" />
+        <IconArrowLeft v-show="style.slidein || style.slideout" />
       </div>
       <div
         class="icon"
@@ -25,7 +26,7 @@
         id="i-lock"
         v-bind:title="i18n.lock"
         v-on:click="lock()"
-        v-show="!style.isEditing && !!defaultEncryption"
+        v-show="!(style.slidein || style.slideout) && !style.isEditing && !!defaultEncryption"
       >
         <IconLock />
       </div>
@@ -36,7 +37,7 @@
           left: !!defaultEncryption ? '70px' : '45px',
         }"
         v-show="
-          (dropboxToken || driveToken || oneDriveToken) && !style.isEditing
+          !(style.slidein || style.slideout) && (dropboxToken || driveToken || oneDriveToken) && !style.isEditing
         "
       >
         <IconSync />
@@ -45,7 +46,7 @@
         class="icon"
         id="i-qr"
         v-bind:title="i18n.add_qr"
-        v-show="!style.isEditing"
+        v-show="!(style.slidein || style.slideout) && !style.isEditing"
         v-on:click="beginCapture()"
       >
         <IconScan />
@@ -78,6 +79,7 @@ import { getCurrentTab, okToInjectContentScript } from "../../utils";
 
 // Icons
 import IconCog from "../../../svg/cog.svg";
+import IconArrowLeft from "../../../svg/arrow-left.svg";
 import IconLock from "../../../svg/lock.svg";
 import IconSync from "../../../svg/sync.svg";
 import IconScan from "../../../svg/scan.svg";
@@ -120,8 +122,12 @@ export default Vue.extend({
       });
       window.close();
     },
-    showMenu() {
-      this.$store.commit("style/showMenu");
+    toggleMenu() {
+      if (this.$store.state.style.style.slidein || this.$store.state.style.style.slideout) {
+        this.$store.commit("style/hideMenu");
+      } else {
+        this.$store.commit("style/showMenu");
+      }
     },
     showInfo(page: string) {
       if (page === "AddMethodPage") {
@@ -195,6 +201,7 @@ export default Vue.extend({
   },
   components: {
     IconCog,
+    IconArrowLeft,
     IconLock,
     IconSync,
     IconScan,
