@@ -2,6 +2,31 @@ const path = require("path");
 const { VueLoaderPlugin } = require("vue-loader");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
+// Replaces new Function('return this') with 'self' in webpack runtime to avoid AMO warning
+class SafeGlobalPlugin {
+  apply(compiler) {
+    compiler.hooks.compilation.tap("SafeGlobalPlugin", (compilation) => {
+      compilation.hooks.processAssets.tap(
+        { name: "SafeGlobalPlugin", stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_OPTIMIZE },
+        (assets) => {
+          for (const name of Object.keys(assets)) {
+            if (name.endsWith(".js")) {
+              let source = assets[name].source();
+              if (source.includes("new Function")) {
+                source = source.replace(
+                  /return this \|\| new Function\('return this'\)\(\)/g,
+                  "return self"
+                );
+                assets[name] = new compiler.webpack.sources.RawSource(source);
+              }
+            }
+          }
+        }
+      );
+    });
+  }
+}
+
 module.exports = {
   mode: "development",
   devtool: "source-map",
@@ -60,7 +85,8 @@ module.exports = {
           vue: true
         }
       }
-    })
+    }),
+    new SafeGlobalPlugin()
   ],
   resolve: {
     extensions: [
@@ -82,6 +108,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/dist/"
+    publicPath: "/dist/",
+    globalObject: "self"
   }
 };

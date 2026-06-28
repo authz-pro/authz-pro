@@ -51,22 +51,30 @@ function getQrDebug(
       const url = captureCanvas.toDataURL();
       const infoDom = document.getElementById("info");
       if (infoDom) {
-        infoDom.innerHTML =
-          "<b>Scan Data:</b><br>" +
-          `<br>` +
-          `Window Inner Width: ${windowWidth}<br>` +
-          `Width: ${width}<br>` +
-          `Height: ${height}<br>` +
-          `Left: ${left}<br>` +
-          `Top: ${top}<br>` +
-          `Screen Width: ${window.screen.width}<br>` +
-          `Screen Height: ${window.screen.height}<br>` +
-          `Capture Width: ${qr.width}<br>` +
-          `Capture Height: ${qr.height}<br>` +
-          `Device Pixel Ratio: ${devicePixelRatio} / ${window.devicePixelRatio}<br>` +
-          `Tab ID: ${tab.id}<br>` +
-          "<br>" +
-          "<b>Captured Screenshot:</b>";
+        infoDom.textContent = "";
+        const lines = [
+          ["b", "Scan Data:"],
+          ["text", ""],
+          ["text", `Window Inner Width: ${windowWidth}`],
+          ["text", `Width: ${width}`],
+          ["text", `Height: ${height}`],
+          ["text", `Left: ${left}`],
+          ["text", `Top: ${top}`],
+          ["text", `Screen Width: ${window.screen.width}`],
+          ["text", `Screen Height: ${window.screen.height}`],
+          ["text", `Capture Width: ${qr.width}`],
+          ["text", `Capture Height: ${qr.height}`],
+          ["text", `Device Pixel Ratio: ${devicePixelRatio} / ${window.devicePixelRatio}`],
+          ["text", `Tab ID: ${tab.id}`],
+          ["text", ""],
+          ["b", "Captured Screenshot:"],
+        ];
+        for (const [tag, content] of lines) {
+          const el = document.createElement(tag === "b" ? "b" : "span");
+          el.textContent = content;
+          infoDom.appendChild(el);
+          infoDom.appendChild(document.createElement("br"));
+        }
       }
 
       const qrDom = document.getElementById("qr") as HTMLImageElement;
