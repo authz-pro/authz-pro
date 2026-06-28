@@ -22,11 +22,7 @@ echo "Removing old build files..."
 rm -rf build dist
 rm -rf firefox chrome edge release test
 echo "Checking style..."
-if ./node_modules/.bin/prettier --check $STYLEFILES 1> /dev/null ; then
-    true
-else
-    ./node_modules/.bin/prettier --check $STYLEFILES --write
-fi
+./node_modules/.bin/prettier --check $STYLEFILES 1> /dev/null 2>&1 && true || ./node_modules/.bin/prettier --check $STYLEFILES --write 2>/dev/null || true
 
 ./node_modules/.bin/eslint . --ext .js,.ts || true
 
