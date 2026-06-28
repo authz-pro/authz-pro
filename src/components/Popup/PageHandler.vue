@@ -5,7 +5,7 @@
       v-if="!(info === 'EnterPasswordPage' || info === 'LoadingPage')"
       v-on:click="hideInfo()"
     >
-      <IconXCircle />
+      <IconArrowLeft />
     </div>
     <component v-bind:is="info" id="infoContent"></component>
   </div>
@@ -13,7 +13,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import IconXCircle from "../../../svg/x-circle.svg";
+import IconArrowLeft from "../../../svg/arrow-left.svg";
 
 import AddAccountPage from "./AddAccountPage.vue";
 import AddMethodPage from "./AddMethodPage.vue";
@@ -39,7 +39,7 @@ export default Vue.extend({
     },
   },
   components: {
-    IconXCircle,
+    IconArrowLeft,
     AddAccountPage,
     AddMethodPage,
     SetPasswordPage,

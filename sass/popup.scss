@@ -87,6 +87,9 @@ svg {
     }
 
     svg {
+      @include themify($themes) {
+        fill: themed("black-1");
+      }
       vertical-align: sub;
     }
   }
