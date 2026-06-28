@@ -55,19 +55,11 @@
         class="icon"
         id="i-edit"
         v-bind:title="i18n.edit"
-        v-if="!style.isEditing"
+        v-show="!(style.slidein || style.slideout)"
         v-on:click="editEntry()"
       >
-        <IconPencil />
-      </div>
-      <div
-        class="icon"
-        id="i-edit"
-        v-bind:title="i18n.edit"
-        v-else
-        v-on:click="editEntry()"
-      >
-        <IconCheck />
+        <IconPencil v-show="!style.isEditing" />
+        <IconCheck v-show="style.isEditing" />
       </div>
     </div>
   </div>
@@ -164,9 +156,15 @@ export default Vue.extend({
         return;
       }
 
-      const tab = await getCurrentTab();
-      // Insert content script
-      if (okToInjectContentScript(tab)) {
+      try {
+        const tab = await getCurrentTab();
+        if (!tab || !okToInjectContentScript(tab)) {
+          this.$store.commit(
+            "notification/alert",
+            this.i18n.capture_failed
+          );
+          return;
+        }
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
           files: ["/dist/content.js"],
@@ -176,7 +174,7 @@ export default Vue.extend({
           files: ["/css/content.css"],
         });
 
-        if (tab.url?.startsWith("file:")) {
+        if (tab.url.startsWith("file:")) {
           if (
             await this.$store.dispatch(
               "notification/confirm",
@@ -196,6 +194,9 @@ export default Vue.extend({
             window.close();
           }
         });
+      } catch (e) {
+        console.error(e);
+        this.$store.commit("notification/alert", this.i18n.capture_failed);
       }
     },
   },

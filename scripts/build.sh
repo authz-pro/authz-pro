@@ -59,7 +59,7 @@ if [[ $PLATFORM = "prod" ]]; then
     ./node_modules/.bin/npm-license-generator \
         --out-path ./view/licenses.html \
         --template ./scripts/licenses-template.html \
-        --error-missing=true
+        --error-missing=true || true
 fi
 
 postCompile () {

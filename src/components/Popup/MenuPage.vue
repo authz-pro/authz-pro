@@ -52,7 +52,7 @@
 
         <p
           v-bind:title="i18n.source"
-          v-on:click="openLink('https://github.com/anomalyco/authenticator')"
+          v-on:click="openLink('https://github.com/authz-pro/authz-pro')"
         >
           <span><IconCode /></span>{{ i18n.source }}
         </p>
