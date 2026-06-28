@@ -139,7 +139,6 @@ function isMatchedEntry(
 export async function getCurrentTab() {
   const currentWindow = await chrome.windows.getCurrent();
   const queryOptions = { active: true, windowId: currentWindow.id };
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
   const [tab] = await chrome.tabs.query(queryOptions);
   return tab;
 }

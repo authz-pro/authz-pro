@@ -5,7 +5,8 @@ import jsQR from "jsqr";
 // @ts-expect-error - injected by vue-svg-loader
 import scanGIF from "../images/scan.gif";
 
-if (!document.getElementById("__ga_grayLayout__")) {
+if (!document.documentElement.dataset.gaListener) {
+  document.documentElement.dataset.gaListener = "1";
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.action) {
       case "capture":
